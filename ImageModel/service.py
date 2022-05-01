@@ -52,20 +52,22 @@ app = Flask(__name__)
 
 #route to entertain our post and get request from flutter app
 @app.route('/score', methods = ['POST'])
-def gradingRoute():
+def nameRoute():
 
     #fetching the global response variable to manipulate inside the function
     global response
 
     request_data = request.data #getting the response data
-    request_data = json.loads(request_data.decode('utf-8'))#converting it from json to key value pair
-    imageData = request_data['img'] #assigning img to imageData
-    target = request_data['target'] #assigning target to target
+    request_data = json.loads(request_data.decode('utf-8')) #converting it from json to key value pair
+    imageData = request_data['img'] #assigning it to img
+    target = request_data['target'] #assigning it to target
     imageData = base64.b64decode(imageData)
     with open('./ImageModel/test.png', "wb") as imageFile:
         imageFile.write(imageData)
         imageFile.close
+        
         imageFile = './ImageModel/test.png'
+    
     
     comparison = './ImageModel/CharacterImages/'+target+'.png'
         
@@ -99,16 +101,16 @@ def gradingRoute():
             modelSuccess = True
             print("success")
 
-        ssim = ssim * 100
+        ssim = ssim * 120
         shape = shape * 1000
-        score = ssim - shape + 30
+        score = ssim - shape + 37
         if modelSuccess:
-            score += 25
+            score += 40
             print("success added")
             if (ssim >= 35):
-                score += 10
+                score += 15
                 print("bonus added")
-
+        
         if score < 0:
             score = 0
         if score > 100:
@@ -116,7 +118,7 @@ def gradingRoute():
 
         print(((cv2.countNonZero(image))))
         detected = ((cv2.countNonZero(image)))
-        if detected < 10:
+        if detected < 15:
             score = 0
 
         print("Final score =",score)
